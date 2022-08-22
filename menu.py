@@ -23,6 +23,7 @@ def menuprincipal():
         print("")
         print("")
         print("")
+        print("")
 
         opcion = int(input("ingrese el numero"))
 
