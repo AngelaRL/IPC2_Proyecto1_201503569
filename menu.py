@@ -1,5 +1,6 @@
 from ast import Num
 from listaPacientes import listaPaciente
+from paciente import paciente
 import xml.etree.ElementTree as AE
 
 
@@ -24,17 +25,19 @@ def menuprincipal():
         print("")
     
 
-        opcion = int(input("ingrese el numero"))
+        opcion = int(input("ingrese el numero:    "))
 
         if opcion == 1:
-                       
-            print("")
-            ruta = input('Ingrese la ruta del archivo:')
-            print("")
-            print("")
-            ruta.insertar(ruta)
 
-            ruta.cargarPacientes()
+            ruta = listaPaciente()
+
+            print("ingrese la ruta del archivo")
+            rutaArchivo = input('  ') 
+            print("")
+            print("")
+            
+
+            ruta.cargarPacientes(rutaArchivo)
 
 
             
