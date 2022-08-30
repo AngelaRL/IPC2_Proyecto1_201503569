@@ -1,6 +1,6 @@
 class nodoPaciente:
 
-    def __init__(self,dato):
+    def __init__(self, paciente):
         
-        self.dato = dato
+        self.paciente = paciente
         self.siguiente = None #apunta a vacio 
