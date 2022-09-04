@@ -1,5 +1,6 @@
 from arejilla import arejilla
-from listaCelulas import listaCelulas
+from listaMuestras import listaMuestra
+from muestra import Muestra
 
 class paciente:
 
@@ -10,7 +11,8 @@ class paciente:
         self.edad = edad
         self.periodos = periodos
         self.m = m
-        self.celulasMuestra = listaCelulas(m)
+        self.celulasMuestra = listaMuestra(m)
+
 
     
 

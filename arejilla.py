@@ -7,4 +7,7 @@ class arejilla:
         self.f = f
         self.estado = True #decimos que la celula esta sana 
         self.siguiente = None
+        self.posicion = 0
+
+    
 
