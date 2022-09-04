@@ -2,7 +2,7 @@ from turtle import st
 from arejilla import arejilla
 
 
-class listaCelulas:
+class Muestra:
 
     def __init__(self, m):
 
@@ -11,9 +11,10 @@ class listaCelulas:
         self.tamaño = 0
         self.inicializandoMuestra(m)
 
-    def insertarCelula(self, f, c): #para que se este insertando las celulas 
+    def insertarCelula(self, f, c, m): #para que se este insertando las celulas 
 
         nuevo = arejilla(f,c)
+        nuevo.posicion = f*m+c
         self.tamaño += 1 #aqui es donde aumentamos el tamaño de la lista 
         
         if self.primerNodo == None: # ciclo para validar si la lista esta vacia 
@@ -29,12 +30,13 @@ class listaCelulas:
 
             for y in range(m):
 
-                self.insertarCelula(x,y)
+                self.insertarCelula(x,y,m)
+                
 
 
     def celulaInfectada(self, x, y, m):
         temp = self.primerNodo
-        posicion = y+x*m
+        posicion = y+x*m #para la posicion de la celula infectada 
         n = m*m
 
         for recorrido in range(n):
@@ -67,3 +69,7 @@ class listaCelulas:
 
             temp = temp.siguiente #para recorrer
         print(dibujo)    
+
+    
+
+    
