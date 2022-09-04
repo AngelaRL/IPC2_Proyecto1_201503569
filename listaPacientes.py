@@ -1,3 +1,4 @@
+from muestra import Muestra
 from paciente import paciente
 from arejilla import arejilla
 from nodoPaciente import nodoPaciente
@@ -29,12 +30,12 @@ class listaPaciente:
 
         while actual != None: #mientras sea diferente de vacio 
             print(actual.paciente.nombre,actual.paciente.m)
-            actual.paciente.celulasMuestra.mostrarCelula(actual.paciente.m)
+            actual.paciente.celulasMuestra.primerNodo.muestra.mostrarCelula(actual.paciente.m)
             print('-----------------------------------------------------------')
             actual = actual.siguiente #con esto indicamos que vamso a avanzar al siguiente nodo (recorrer la lista)
     
     def cargarPacientes(self, rutaArchivo):
-
+        print('Empezando a anlizar el archivo...')
         #para los datos de los pacientes 
         nombrePa = ''
         edad = 0
@@ -63,12 +64,15 @@ class listaPaciente:
             peridos = ''
             m = ''
             auxpa = None
+            auxmuestra = None
 
             if elementoArchivo.tag == 'paciente': 
+                print('Obteniendo paciente...')
 
                 for subElemento in elementoArchivo: #subelemento para etiqueta datospersonales
 
                     if subElemento.tag == 'datospersonales':
+                        print('Registrando los datos del paciente... ')
 
                         for ssElement in subElemento:  #ssElement para etiquetas de nombre, edad, celda
 
@@ -76,24 +80,23 @@ class listaPaciente:
 
                                 nombrePa = ssElement.text
 
-                                print(nombrePa)
+                                print('Nombre: ',nombrePa)
 
                             elif ssElement.tag == 'edad':
 
                                 edad = ssElement.text
 
-                                print(edad)
+                                print('Edad: ',edad)
                     elif subElemento.tag == 'periodos':
 
                         peridos = subElemento.text
-
-                        print(peridos)
-
+                       
                     elif subElemento.tag == 'm':
 
                         m = subElemento.text
+                        auxmuestra = Muestra(int(m))
 
-                        print(m)
+                        print('La muestra es de tamaño: ',m)
                         auxpa = paciente(nombrePa, int(edad), int(peridos), int(m))
                     
                     elif subElemento.tag == 'rejilla':
@@ -101,23 +104,28 @@ class listaPaciente:
                         for ssElement in subElemento: #para entrar a la etiqueta celta que esta dentro de etiqueta rejilla 
 
                             if ssElement.tag == 'celda':
-
-                                fila = ssElement.get('f')
-                                print(fila)
+                                print('Registrando los datos de la muestra... ')
+                                fila = ssElement.get('f')                                
                                 columna = ssElement.get('c')
-                                print(columna)
+                               
+                                auxmuestra.celulaInfectada(int(fila),int(columna),int(m)) #inserta las celulas infectadas 
+                        auxpa.celulasMuestra.insertarMuestra(auxmuestra)    
 
-                                auxpa.celulasMuestra.celulaInfectada(int(fila),int(columna),int(m))
             self.insertar(auxpa)
-        self.mostrarLista()
-            
+                           
         print('-------------------------------------------------')
 
 
+    def buscarPaciente(self, nombre):
+        temp = self.primerNodo
+        while temp:
+            if temp.paciente.nombre == nombre:
+                return temp        
+            temp = temp.siguiente
+        return None
+        
 
-
-
-
+    
 
 
 
