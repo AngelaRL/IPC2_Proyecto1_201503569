@@ -1,7 +1,9 @@
+from textwrap import indent
+from muestra import Muestra
 from paciente import paciente
-from arejilla import arejilla
 from nodoPaciente import nodoPaciente
 import xml.etree.ElementTree as ET
+from xml.dom import minidom
 
 
 class listaPaciente:
@@ -29,12 +31,20 @@ class listaPaciente:
 
         while actual != None: #mientras sea diferente de vacio 
             print(actual.paciente.nombre,actual.paciente.m)
-            actual.paciente.celulasMuestra.mostrarCelula(actual.paciente.m)
+            actual.paciente.celulasMuestra.primerNodo.muestra.mostrarCelula(actual.paciente.m)
             print('-----------------------------------------------------------')
             actual = actual.siguiente #con esto indicamos que vamso a avanzar al siguiente nodo (recorrer la lista)
+
+    def mostrarPacientes(self): #este metodo nos ayudara a mostrar la lista 
+        actual = self.primerNodo
+
+        while actual != None: #mientras sea diferente de vacio 
+            print('Paciente: ',actual.paciente.nombre)
+            actual = actual.siguiente #con esto indicamos que vamso a avanzar al siguiente nodo (recorrer la lista)
+        print('-----------------------------------------------------------')
     
     def cargarPacientes(self, rutaArchivo):
-
+        print('Empezando a anlizar el archivo...')
         #para los datos de los pacientes 
         nombrePa = ''
         edad = 0
@@ -63,12 +73,15 @@ class listaPaciente:
             peridos = ''
             m = ''
             auxpa = None
+            auxmuestra = None
 
             if elementoArchivo.tag == 'paciente': 
+                print('Obteniendo paciente...')
 
                 for subElemento in elementoArchivo: #subelemento para etiqueta datospersonales
 
                     if subElemento.tag == 'datospersonales':
+                        print('Registrando los datos del paciente... ')
 
                         for ssElement in subElemento:  #ssElement para etiquetas de nombre, edad, celda
 
@@ -76,24 +89,23 @@ class listaPaciente:
 
                                 nombrePa = ssElement.text
 
-                                print(nombrePa)
+                                print('Nombre: ',nombrePa)
 
                             elif ssElement.tag == 'edad':
 
                                 edad = ssElement.text
 
-                                print(edad)
+                                print('Edad: ',edad)
                     elif subElemento.tag == 'periodos':
 
                         peridos = subElemento.text
-
-                        print(peridos)
-
+                       
                     elif subElemento.tag == 'm':
 
                         m = subElemento.text
+                        auxmuestra = Muestra(int(m))
 
-                        print(m)
+                        print('La muestra es de tamaño: ',m)
                         auxpa = paciente(nombrePa, int(edad), int(peridos), int(m))
                     
                     elif subElemento.tag == 'rejilla':
@@ -101,23 +113,57 @@ class listaPaciente:
                         for ssElement in subElemento: #para entrar a la etiqueta celta que esta dentro de etiqueta rejilla 
 
                             if ssElement.tag == 'celda':
-
-                                fila = ssElement.get('f')
-                                print(fila)
+                                print('Registrando los datos de la muestra... ')
+                                fila = ssElement.get('f')                                
                                 columna = ssElement.get('c')
-                                print(columna)
+                               
+                                auxmuestra.celulaInfectada(int(fila),int(columna),int(m)) #inserta las celulas infectadas 
+                        auxpa.celulasMuestra.insertarMuestra(auxmuestra)    
 
-                                auxpa.celulasMuestra.celulaInfectada(int(fila),int(columna),int(m))
             self.insertar(auxpa)
-        self.mostrarLista()
-            
+                           
         print('-------------------------------------------------')
 
 
+    def buscarPaciente(self, nombre):
+        temp = self.primerNodo
+        while temp:
+            if temp.paciente.nombre == nombre:
+                return temp        
+            temp = temp.siguiente
+        return None
+        
+    def resultados(self):
+        temp = self.primerNodo
 
+        raiz = ET.Element('pacientes')
 
+        while temp:
+            paciente = ET.SubElement(raiz, 'paciente')
+            dp = ET.SubElement(paciente,'datospersonales')
+            ET.SubElement(dp,'nombre').text= temp.paciente.nombre
+            ET.SubElement(dp,'edad').text= str(temp.paciente.edad)
+            ET.SubElement(paciente,'periodos').text= str(temp.paciente.periodos)
+            ET.SubElement(paciente,'m').text= str(temp.paciente.m)
+            temp.paciente.celulasMuestra.procesando()
+            if temp.paciente.celulasMuestra.n == 0 and temp.paciente.celulasMuestra.n1 == 0:
+                ET.SubElement(paciente, 'resultado').text = 'leve'
+            else:
+                if  (temp.paciente.celulasMuestra.n == 1 or temp.paciente.celulasMuestra.n1 == 1) or (temp.paciente.celulasMuestra.n == 1 and temp.paciente.celulasMuestra.n1 == 1):
+                    ET.SubElement(paciente, 'resultado').text = 'mortal'
+                else: 
+                    ET.SubElement(paciente, 'resultado').text = 'grave'
+            if temp.paciente.celulasMuestra.n != 0 :
+                ET.SubElement(paciente, 'n').text = str(temp.paciente.celulasMuestra.n)
+            if temp.paciente.celulasMuestra.n1 != 0 :
+                ET.SubElement(paciente, 'n1').text = str(temp.paciente.celulasMuestra.n1)
+                
+            temp = temp.siguiente
 
-
+        archivo = open('resultados.xml', 'a')
+        archivo.write(minidom.parseString(ET.tostring(raiz, encoding='utf-8').decode('utf-8')).toprettyxml(indent=" "))
+        archivo.close()
+    
 
 
 
