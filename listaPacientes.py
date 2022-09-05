@@ -1,8 +1,9 @@
+from textwrap import indent
 from muestra import Muestra
 from paciente import paciente
-from arejilla import arejilla
 from nodoPaciente import nodoPaciente
 import xml.etree.ElementTree as ET
+from xml.dom import minidom
 
 
 class listaPaciente:
@@ -33,6 +34,14 @@ class listaPaciente:
             actual.paciente.celulasMuestra.primerNodo.muestra.mostrarCelula(actual.paciente.m)
             print('-----------------------------------------------------------')
             actual = actual.siguiente #con esto indicamos que vamso a avanzar al siguiente nodo (recorrer la lista)
+
+    def mostrarPacientes(self): #este metodo nos ayudara a mostrar la lista 
+        actual = self.primerNodo
+
+        while actual != None: #mientras sea diferente de vacio 
+            print('Paciente: ',actual.paciente.nombre)
+            actual = actual.siguiente #con esto indicamos que vamso a avanzar al siguiente nodo (recorrer la lista)
+        print('-----------------------------------------------------------')
     
     def cargarPacientes(self, rutaArchivo):
         print('Empezando a anlizar el archivo...')
@@ -124,7 +133,36 @@ class listaPaciente:
             temp = temp.siguiente
         return None
         
+    def resultados(self):
+        temp = self.primerNodo
 
+        raiz = ET.Element('pacientes')
+
+        while temp:
+            paciente = ET.SubElement(raiz, 'paciente')
+            dp = ET.SubElement(paciente,'datospersonales')
+            ET.SubElement(dp,'nombre').text= temp.paciente.nombre
+            ET.SubElement(dp,'edad').text= str(temp.paciente.edad)
+            ET.SubElement(paciente,'periodos').text= str(temp.paciente.periodos)
+            ET.SubElement(paciente,'m').text= str(temp.paciente.m)
+            temp.paciente.celulasMuestra.procesando()
+            if temp.paciente.celulasMuestra.n == 0 and temp.paciente.celulasMuestra.n1 == 0:
+                ET.SubElement(paciente, 'resultado').text = 'leve'
+            else:
+                if  (temp.paciente.celulasMuestra.n == 1 or temp.paciente.celulasMuestra.n1 == 1) or (temp.paciente.celulasMuestra.n == 1 and temp.paciente.celulasMuestra.n1 == 1):
+                    ET.SubElement(paciente, 'resultado').text = 'mortal'
+                else: 
+                    ET.SubElement(paciente, 'resultado').text = 'grave'
+            if temp.paciente.celulasMuestra.n != 0 :
+                ET.SubElement(paciente, 'n').text = str(temp.paciente.celulasMuestra.n)
+            if temp.paciente.celulasMuestra.n1 != 0 :
+                ET.SubElement(paciente, 'n1').text = str(temp.paciente.celulasMuestra.n1)
+                
+            temp = temp.siguiente
+
+        archivo = open('resultados.xml', 'a')
+        archivo.write(minidom.parseString(ET.tostring(raiz, encoding='utf-8').decode('utf-8')).toprettyxml(indent=" "))
+        archivo.close()
     
 
 

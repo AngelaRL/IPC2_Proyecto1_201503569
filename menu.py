@@ -3,6 +3,7 @@ from turtle import st
 from listaPacientes import listaPaciente
 from paciente import paciente
 import xml.etree.ElementTree as AE
+import os 
 
 salir = False
 ruta = None
@@ -38,14 +39,15 @@ def menuprincipal():
             print("")
             print("")
             
-
-            ruta.cargarPacientes(rutaArchivo)
-
+            if os.path.exists(rutaArchivo):
+                ruta.cargarPacientes(rutaArchivo)
+            else:
+                print('Verifique el nombre del archivo  ')
             
         elif opcion == 2:
             while not salir:
                 print('::::::::::::::: Seccion de Pacientes :::::::::::::::::')
-                
+                ruta.mostrarPacientes()
                 recibirPaciente = ruta.buscarPaciente(input('Escriba el nombre del paciente a Analizar:  '))
 
                 if (recibirPaciente):
@@ -65,7 +67,8 @@ def menuprincipal():
                 print("")
             salir = False
         elif opcion == 3:
-            print("")
+            print('Generando archivo de salida...')
+            ruta.resultados()
         elif opcion == 4:
             salir = True
             print("Cerrando programa")

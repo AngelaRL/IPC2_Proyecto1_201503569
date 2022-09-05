@@ -1,3 +1,4 @@
+from tempfile import tempdir
 from turtle import pos, st
 from arejilla import arejilla
 from muestra import Muestra
@@ -11,6 +12,9 @@ class listaMuestra:
         self.primerNodo = None
         self.ultimoNodo = None
         self.tamaño = 0
+        self.resultado = ''
+        self.n = 0
+        self.n1 = 0
 
     def insertarMuestra(self, muestra): #para que se este insertando las celulas 
 
@@ -64,8 +68,9 @@ class listaMuestra:
                     if temp.posicion == (vecino.f*self.m + vecino.c) and temp.estado == False:
                         
                         vecinosEnfermos += 1
-                        temp = None
-                        break                                                                           
+                        break
+                    elif temp.posicion == (vecino.f*self.m + vecino.c) and temp.estado:
+                        break                                                                            
                     temp = temp.siguiente
                 temp = muestra.primerNodo 
         
@@ -80,3 +85,47 @@ class listaMuestra:
 
         return False
         
+    def procesando(self):
+        encontrado = False
+        temp = self.primerNodo
+        temp2 = self.primerNodo.siguiente 
+        periodo = 0
+        while temp2:            #para buscar si hay muestras igualaes a la original 
+            periodo +=1 
+            if self.verificandoRepeticion(temp.muestra, temp2.muestra):
+                encontrado = True
+                break                
+            temp2 = temp2.siguiente
+        if encontrado:            
+            self.n = periodo
+        else:
+            repetidos = 0
+            periodo = 0 
+            temp = self.primerNodo.siguiente 
+            while temp:         #para buscar si hay laguna muestra que se repita que no sea la muestra original
+                temp2 = temp.siguiente
+                repetidos = 0 
+                periodo +=1                     
+                while temp2:
+                    repetidos += 1
+                    if self.verificandoRepeticion(temp.muestra, temp2.muestra):
+                        encontrado = True
+                        break
+                    temp2 = temp2.siguiente
+                temp = temp.siguiente
+            if encontrado:
+                self.n = periodo
+                self.n1 = repetidos   
+
+
+
+    def verificandoRepeticion(self, muestra, muestra2):
+        temp = muestra.primerNodo
+        temp2 = muestra2.primerNodo
+        while temp:
+            
+            if (temp.estado != temp2.estado):
+                return False
+            temp = temp.siguiente
+            temp2 = temp2.siguiente
+        return True 
