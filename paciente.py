@@ -12,6 +12,7 @@ class paciente:
         self.periodos = periodos
         self.m = m
         self.celulasMuestra = listaMuestra(m)
+        self.periodoaux = periodos
 
 
     

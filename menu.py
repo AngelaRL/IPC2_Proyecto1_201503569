@@ -107,23 +107,23 @@ def menuPaciente(pacienteE):
                     print('El estado del paciente es: leve')
                 else:
                     if  (pacienteE.paciente.celulasMuestra.n == 1 or pacienteE.paciente.celulasMuestra.n1 == 1) or (pacienteE.paciente.celulasMuestra.n == 1 and pacienteE.paciente.celulasMuestra.n1 == 1):
-                        print('El estado del paciente es: mortal')
+                        print('El estado del paciente es: mortal') 
                     else: 
                         print('El estado del paciente es: grave')
                 if pacienteE.paciente.celulasMuestra.n != 0 :
                    print('El valor de n es: '+str(pacienteE.paciente.celulasMuestra.n))
                 if pacienteE.paciente.celulasMuestra.n1 != 0 :
                     print('El valor de n1 es: '+str(pacienteE.paciente.celulasMuestra.n1))
-            while  pacienteE.paciente.periodos > 0:
+            while  pacienteE.paciente.periodoaux > 0:
                 print(" Periodo numero: "+str(contador))
-                pacienteE.paciente.celulasMuestra.analizar(contador)
-                pacienteE.paciente.periodos-=1
+                pacienteE.paciente.celulasMuestra.analizar(contador) 
+                pacienteE.paciente.periodoaux-=1
                 contador += 1
         elif subopcion == 2:
-            if(pacienteE.paciente.periodos > 0 ): 
+            if(pacienteE.paciente.periodoaux > 0 ): 
                 print(" Periodo numero: "+str(contador))
                 pacienteE.paciente.celulasMuestra.analizar(contador)
-                pacienteE.paciente.periodos-=1
+                pacienteE.paciente.periodoaux-=1
                 contador += 1
             else:
                 print('Se llego al maximo de peridos permitidos.') 
