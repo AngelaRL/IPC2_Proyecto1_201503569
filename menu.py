@@ -77,10 +77,13 @@ def menuprincipal():
 
 def menuPaciente(pacienteE):
     global salir, ruta
+    contador = 1
     while not salir:
         print("")
         print("")
         print(":::::::::::  PACIENTE: "+pacienteE.paciente.nombre +" ::::::::::::")
+        print("")
+        pacienteE.paciente.celulasMuestra.primerNodo.muestra.mostrarCelula(pacienteE.paciente.m)
         print("")
         print("1. Analizar Muestra Automaticamente")
         print("2. Analizar Muestra por Periodo ")
@@ -95,19 +98,50 @@ def menuPaciente(pacienteE):
 
         if subopcion == 1:
             print("Empezando a analizar Automaticamente:  ")
-            contador = 1
-            while pacienteE.paciente.periodos > 0:
+            if(pacienteE.paciente.periodos == 0 ): 
+                
+                print('Se llego al maximo de peridos permitidos.') 
+                print('Se mostrara los resultados que se hicieron previamente.')
+                pacienteE.paciente.celulasMuestra.recorriendo()
+                if pacienteE.paciente.celulasMuestra.n == 0 and pacienteE.paciente.celulasMuestra.n1 == 0:
+                    print('El estado del paciente es: leve')
+                else:
+                    if  (pacienteE.paciente.celulasMuestra.n == 1 or pacienteE.paciente.celulasMuestra.n1 == 1) or (pacienteE.paciente.celulasMuestra.n == 1 and pacienteE.paciente.celulasMuestra.n1 == 1):
+                        print('El estado del paciente es: mortal')
+                    else: 
+                        print('El estado del paciente es: grave')
+                if pacienteE.paciente.celulasMuestra.n != 0 :
+                   print('El valor de n es: '+str(pacienteE.paciente.celulasMuestra.n))
+                if pacienteE.paciente.celulasMuestra.n1 != 0 :
+                    print('El valor de n1 es: '+str(pacienteE.paciente.celulasMuestra.n1))
+            while  pacienteE.paciente.periodos > 0:
                 print(" Periodo numero: "+str(contador))
-                pacienteE.paciente.celulasMuestra.analizar()
-                pacienteE.paciente.periodos-=1 
+                pacienteE.paciente.celulasMuestra.analizar(contador)
+                pacienteE.paciente.periodos-=1
                 contador += 1
         elif subopcion == 2:
             if(pacienteE.paciente.periodos > 0 ): 
                 print(" Periodo numero: "+str(contador))
-                pacienteE.paciente.celulasMuestra.analizar()
-                pacienteE.paciente.periodos-=1 
+                pacienteE.paciente.celulasMuestra.analizar(contador)
+                pacienteE.paciente.periodos-=1
+                contador += 1
             else:
-                print('Error: No se puede analizar nuevamente la muestra debido que llego al maximo de peridos permitidos.')     
+                print('Se llego al maximo de peridos permitidos.') 
+                print('Se mostrara los resultados que se hicieron previamente.')
+                pacienteE.paciente.celulasMuestra.recorriendo()
+                if pacienteE.paciente.celulasMuestra.n == 0 and pacienteE.paciente.celulasMuestra.n1 == 0:
+                    print('El estado del paciente es: leve')
+                else:
+                    if  (pacienteE.paciente.celulasMuestra.n == 1 or pacienteE.paciente.celulasMuestra.n1 == 1) or (pacienteE.paciente.celulasMuestra.n == 1 and pacienteE.paciente.celulasMuestra.n1 == 1):
+                        print('El estado del paciente es: mortal')
+                    else: 
+                        print('El estado del paciente es: grave')
+                if pacienteE.paciente.celulasMuestra.n != 0 :
+                   print('El valor de n es: '+str(pacienteE.paciente.celulasMuestra.n))
+                if pacienteE.paciente.celulasMuestra.n1 != 0 :
+                    print('El valor de n1 es: '+str(pacienteE.paciente.celulasMuestra.n1))
+        
+                    
         elif subopcion == 3: 
             salir=True
         else:

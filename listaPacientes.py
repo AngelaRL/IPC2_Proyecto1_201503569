@@ -145,7 +145,7 @@ class listaPaciente:
             ET.SubElement(dp,'edad').text= str(temp.paciente.edad)
             ET.SubElement(paciente,'periodos').text= str(temp.paciente.periodos)
             ET.SubElement(paciente,'m').text= str(temp.paciente.m)
-            temp.paciente.celulasMuestra.procesando()
+            
             if temp.paciente.celulasMuestra.n == 0 and temp.paciente.celulasMuestra.n1 == 0:
                 ET.SubElement(paciente, 'resultado').text = 'leve'
             else:
